@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Question Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        #question-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center">
+            <h1>명진마켓 - 문제</h1>
+            <button id="generate-btn" class="btn btn-primary">문제 생성</button>
+        </div>
+        <div id="question-container" class="text-center">
+            <p id="question" class="mt-4"></p>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const questions = [
+                "문제 1: 가장 좋아하는 색깔은 무엇인가요?",
+                "문제 2: 어렸을 때 가장 기억에 남는 추억은 무엇인가요?",
+                "문제 3: 가장 최근에 읽은 책은 무엇인가요?",
+                "문제 4: 인생에서 가장 중요한 가치는 무엇인가요?",
+                "문제 5: 당신이 가장 존경하는 인물은 누구인가요?",
+                "문제 6: 하루 중 가장 좋아하는 시간대는 언제인가요?",
+                "문제 7: 꿈꾸는 여행지는 어디인가요?",
+                "문제 8: 가장 좋아하는 취미는 무엇인가요?",
+                "문제 9: 인생에서 이루고 싶은 목표는 무엇인가요?",
+                "문제 10: 가장 감명 깊게 본 영화는 무엇인가요?"
+            ];
+
+            $("#generate-btn").click(function() {
+                const randomIndex = Math.floor(Math.random() * questions.length);
+                $("#question").text(questions[randomIndex]);
+            });
+        });
+    </script>
+</body>
+</html>
