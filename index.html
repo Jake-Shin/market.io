@@ -33,7 +33,7 @@
     <script>
         $(document).ready(function() {
             const questions = [
-                "문제 1: 가장 좋아하는 색깔은 무엇인가요?",
+                "<p style='font-size: 5rem;'>문제 1: 가장 좋아하는 색깔은 무엇인가요?</p>",
                 "문제 2: 어렸을 때 가장 기억에 남는 추억은 무엇인가요?",
                 "문제 3: 가장 최근에 읽은 책은 무엇인가요?",
                 "문제 4: 인생에서 가장 중요한 가치는 무엇인가요?",
@@ -47,7 +47,7 @@
 
             $("#generate-btn").click(function() {
                 const randomIndex = Math.floor(Math.random() * questions.length);
-                $("#question").text(questions[randomIndex]);
+                $("#question").html(questions[randomIndex]);
             });
         });
     </script>
