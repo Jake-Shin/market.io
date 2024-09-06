@@ -30,6 +30,7 @@
         #recent-inputs {
             background-color: #ffffff;
             padding: 20px;
+            margin-bottom: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
@@ -41,7 +42,7 @@
             color: red;
         }
         .correct {
-            color: green;
+            color: #05ff05;
         }
         #result {
             margin-top: 20px;
@@ -49,6 +50,23 @@
             background-color: #ecf0f1;
             border-radius: 10px;
             display: none;
+        }
+        /* 타자 연습 시작 버튼 스타일 */
+        button {
+            background-color: #8e44ad;
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #732d91; /* 호버 시 색상 변경 */
+        }
+        button:focus {
+            outline: none;
         }
     </style>
 </head>
@@ -81,8 +99,8 @@
 
     <script>
         const practiceText = `우리가
-사람들
-하하하
+사람들 앞에서 10분 안에
+성경 창세기부터
 1234`.split('\n');
 
         let currentLineIndex = 0;
