@@ -112,7 +112,7 @@
 이때 요한 일·이·삼서를 기록하여 권면하면서 '하나님은 사랑'이라고 선언합니다.
 그리고 사도 요한은 복음 2세대가 이끄는 소아시아 일곱 교회에 하나님의 어린양과 보좌, 새 하늘과 새 땅을 소개하며 주님 속히 다시 오시리라는 예수님의 간절한 재림 약속을 전하며 계시록 이야기를 끝냅니다.`.split('\n');
 
-        let currentLineIndex = 0;
+let currentLineIndex = 0;
         let startTime;
         let finished = false;
 
@@ -128,12 +128,32 @@
             document.getElementById('input-area').focus();
         }
 
-        // 타자 입력 체크 함수
+        // 실시간 입력 체크 및 오타 확인
         function checkInput() {
-            document.getElementById('status').textContent = "";
-            const typedText = document.getElementById('input-area').value.trim();
-            const currentLine = practiceText[currentLineIndex].trim();
+            const typedText = document.getElementById('input-area').value;
+            const currentLine = practiceText[currentLineIndex];
+            let resultHTML = "";
+            let isCorrect = true;
 
+            // 입력한 문자와 원본 텍스트를 비교하며 실시간으로 결과를 표시
+            for (let i = 0; i < currentLine.length; i++) {
+                const originalChar = currentLine[i] || '';
+                const typedChar = typedText[i] || '';
+
+                if (typedChar === '') {
+                    resultHTML += originalChar; // 아직 입력하지 않은 부분은 원본 텍스트 그대로
+                } else if (originalChar === typedChar) {
+                    resultHTML += `<span class="correct">${originalChar}</span>`; // 맞게 입력된 부분은 초록색
+                } else {
+                    resultHTML += `<span class="error">${originalChar}</span>`; // 오타가 있는 부분은 빨간색
+                    isCorrect = false;
+                }
+            }
+
+            // 현재 줄을 비교한 결과로 업데이트
+            document.getElementById('text-container').innerHTML = resultHTML;
+
+            // 사용자가 모든 문자를 정확히 입력하면 다음 줄로 넘어감
             if (typedText === currentLine && !finished) {
                 document.getElementById('input-area').value = ""; // 입력창 비우기
                 currentLineIndex++;
@@ -175,35 +195,6 @@
                 listItem.textContent = `${index + 1}. ${entry.date} - ${entry.time}초`;
                 historyList.appendChild(listItem);
             });
-        }
-
-        // 오타 체크 함수
-        function checkMistakes() {
-            const typedText = document.getElementById('input-area').value;
-            const currentLine = practiceText[currentLineIndex];
-            let resultHTML = "";
-            let isCorrect = true;
-
-            for (let i = 0; i < currentLine.length; i++) {
-                const originalChar = currentLine[i] || '';
-                const typedChar = typedText[i] || '';
-
-                if (originalChar === typedChar) {
-                    resultHTML += originalChar;
-                } else {
-                    resultHTML += `<span class="error">${originalChar}</span>`;
-                    isCorrect = false;
-                }
-            }
-
-            // 현재 줄을 비교한 결과로 업데이트
-            document.getElementById('text-container').innerHTML = resultHTML;
-
-            if (isCorrect) {
-                document.getElementById('status').textContent = "모든 문자가 정확합니다!";
-            } else {
-                document.getElementById('status').textContent = "오타가 있습니다. 빨간 글자를 확인하세요.";
-            }
         }
 
         // 페이지 로드 시 저장된 기록 표시
