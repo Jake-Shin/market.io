@@ -8,45 +8,58 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
+            background-color: #f5f5f5;
         }
         #text-container {
-            white-space: pre-wrap; /* 줄바꿈을 유지 */
-            margin-bottom: 20px;
+            white-space: pre-wrap;
+            background-color: #9b59b6;
+            color: white;
+            padding: 20px;
             font-size: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
         #input-area {
             width: 100%;
-            height: 50px;
+            padding: 10px;
             font-size: 18px;
+            border: 2px solid #9b59b6;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
-        #status {
-            margin-top: 20px;
+        #recent-inputs {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        #history {
-            margin-top: 30px;
+        .recent-input-item {
+            margin-bottom: 10px;
+            font-size: 16px;
         }
         .error {
             color: red;
-            font-weight: bold;
+        }
+        .correct {
+            color: green;
         }
     </style>
 </head>
 <body>
-    <h1>통성경 전체 10분이야기 타자로 입력해보자!</h1>
-
-    <button onclick="startTyping()">통성경 타자 연습 시작</button>
-    <button onclick="checkMistakes()">오타 확인</button> <!-- 오타 확인 버튼 -->
+    <h1>타자 연습 프로그램</h1>
 
     <div id="text-container"></div>
 
-    <textarea id="input-area" disabled placeholder="타자를 시작하려면 텍스트를 입력하세요" rows="10" cols="60" oninput="checkInput()"></textarea>
+    <textarea id="input-area" disabled placeholder="타자를 시작하려면 텍스트를 입력하세요" rows="2" cols="60" oninput="checkInput()"></textarea>
 
-    <div id="status"></div>
-
-    <div id="history">
-        <h3>타자 연습 기록</h3>
-        <ul id="history-list"></ul>
+    <div id="recent-inputs">
+        <h3>최근 입력한 문장</h3>
+        <div id="recent-1" class="recent-input-item"></div>
+        <div id="recent-2" class="recent-input-item"></div>
+        <div id="recent-3" class="recent-input-item"></div>
     </div>
+
+    <button onclick="startTyping()">타자 연습 시작</button>
 
     <script>
         const practiceText = `성경 창세기부터 요한계시록까지 66권은 하나의 이야기입니다.
@@ -112,8 +125,8 @@
 이때 요한 일·이·삼서를 기록하여 권면하면서 '하나님은 사랑'이라고 선언합니다.
 그리고 사도 요한은 복음 2세대가 이끄는 소아시아 일곱 교회에 하나님의 어린양과 보좌, 새 하늘과 새 땅을 소개하며 주님 속히 다시 오시리라는 예수님의 간절한 재림 약속을 전하며 계시록 이야기를 끝냅니다.`.split('\n');
 
-let currentLineIndex = 0;
-        let startTime;
+        let currentLineIndex = 0;
+        let recentInputs = [];
         let finished = false;
 
         // 타자 연습 시작 함수
@@ -121,10 +134,11 @@ let currentLineIndex = 0;
             currentLineIndex = 0;
             document.getElementById('input-area').value = "";
             document.getElementById('input-area').disabled = false;
-            document.getElementById('status').textContent = "";
             document.getElementById('text-container').textContent = practiceText[currentLineIndex];
+            document.getElementById('recent-1').textContent = '';
+            document.getElementById('recent-2').textContent = '';
+            document.getElementById('recent-3').textContent = '';
             finished = false;
-            startTime = new Date().getTime();
             document.getElementById('input-area').focus();
         }
 
@@ -155,6 +169,9 @@ let currentLineIndex = 0;
 
             // 사용자가 모든 문자를 정확히 입력하면 다음 줄로 넘어감
             if (typedText === currentLine && !finished) {
+                recentInputs.unshift(typedText); // 최근 입력 문장 리스트에 추가
+                updateRecentInputs(); // 최근 입력 문장 업데이트
+
                 document.getElementById('input-area').value = ""; // 입력창 비우기
                 currentLineIndex++;
 
@@ -162,45 +179,18 @@ let currentLineIndex = 0;
                     document.getElementById('text-container').textContent = practiceText[currentLineIndex];
                 } else {
                     finished = true;
-                    const endTime = new Date().getTime();
-                    const timeTaken = (endTime - startTime) / 1000;
-                    document.getElementById('status').textContent = `모든 줄을 완료했습니다! 걸린 시간: ${timeTaken}초`;
+                    document.getElementById('text-container').textContent = "모든 문장을 완료했습니다!";
                     document.getElementById('input-area').disabled = true;
-
-                    // 결과 저장
-                    saveResult(timeTaken);
                 }
             }
         }
 
-        // 결과를 localStorage에 저장하는 함수
-        function saveResult(timeTaken) {
-            const history = JSON.parse(localStorage.getItem('typingHistory')) || [];
-            const currentDate = new Date().toLocaleString();
-            history.push({ date: currentDate, time: timeTaken });
-            localStorage.setItem('typingHistory', JSON.stringify(history));
-
-            // 저장된 기록을 업데이트해서 보여줌
-            displayHistory();
+        // 최근 입력한 문장 3개를 화면에 표시
+        function updateRecentInputs() {
+            document.getElementById('recent-1').textContent = recentInputs[0] || '';
+            document.getElementById('recent-2').textContent = recentInputs[1] || '';
+            document.getElementById('recent-3').textContent = recentInputs[2] || '';
         }
-
-        // 저장된 기록을 화면에 표시하는 함수
-        function displayHistory() {
-            const history = JSON.parse(localStorage.getItem('typingHistory')) || [];
-            const historyList = document.getElementById('history-list');
-            historyList.innerHTML = '';
-
-            history.forEach((entry, index) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${index + 1}. ${entry.date} - ${entry.time}초`;
-                historyList.appendChild(listItem);
-            });
-        }
-
-        // 페이지 로드 시 저장된 기록 표시
-        window.onload = function() {
-            displayHistory();
-        };
     </script>
 </body>
 </html>
