@@ -107,12 +107,35 @@
             border-radius: 10px;
             font-size: 18px;
         }
+
+        /* 흐른시간 */
+        #progress-container1 {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        /* 흐른 시간 */
+        #time-elapsed {
+            font-size: 18px;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <!-- 제목 및 소제목 -->
     <h1>한빛청년부 통성경</h1>
     <h2>10분에 성경 전체 이야기</h2>
+
+    <!-- 진행률 및 흐른 시간 표시 -->
+    <div id="progress-container1">
+        <div id="time-elapsed">흐른 시간: 0초</div>
+    </div>
 
     <!-- 진행률 표시 -->
     <div id="progress-container">진행률: 0%</div>
@@ -251,6 +274,8 @@
             document.getElementById('recent-1').textContent = '';
             document.getElementById('recent-2').textContent = '';
             document.getElementById('recent-3').textContent = '';
+            updateTimeElapsed(); // 시간 업데이트 시작
+            timeInterval = setInterval(updateTimeElapsed, 1000); // 1초마다 시간 업데이트
             finished = false;
             document.getElementById('input-area').focus();
             document.getElementById('result').style.display = "none";
@@ -366,6 +391,13 @@
         function updateProgress() {
             const progress = ((currentLineIndex + 1) / practiceText.length) * 100;
             document.getElementById('progress-container').textContent = `진행률: ${progress.toFixed(2)}%`;
+        }
+
+        // 흐른 시간 업데이트
+        function updateTimeElapsed() {
+            const currentTime = new Date();
+            const timeElapsed = Math.floor((currentTime - startTime) / 1000);
+            document.getElementById('time-elapsed').textContent = (timeElapsed > 0) ? `흐른 시간: ${timeElapsed}초` : `흐른 시간: 0초`;
         }
 		
 		window.onload = function() {
