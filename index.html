@@ -20,6 +20,7 @@
             font-size: 18px;
             border-radius: 10px;
             margin-bottom: 20px;
+            margin-top: 20px;
         }
         #input-area {
             width: 100%;
@@ -35,6 +36,7 @@
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 20px;
+            display: none;
         }
 
         .recent-input-item {
@@ -89,12 +91,34 @@
             color: #555555;
             margin-bottom: 40px;
         }
+
+        #upcoming-text {
+            padding-left: 15px;
+        }
+
+        /* 진행률 */
+        #progress-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <!-- 제목 및 소제목 -->
     <h1>한빛청년부 통성경</h1>
     <h2>10분에 성경 전체 이야기</h2>
+
+    <!-- 진행률 표시 -->
+    <div id="progress-container">진행률: 0%</div>
+
+    <!-- 앞으로 타이핑할 문장 -->
+    <div id="upcoming-text" class="recent-input-item"></div>
 
     <div id="text-container"></div>
 
@@ -231,6 +255,7 @@
             document.getElementById('input-area').focus();
             document.getElementById('result').style.display = "none";
             startTime = new Date(); // 타자 연습 시작 시간 기록
+            updateUpcomingText();
         }
 
         // 실시간 입력 체크 및 오타 확인
@@ -269,6 +294,8 @@
                 if (currentLineIndex < practiceText.length) {
                     document.getElementById('input-area').setSelectionRange(0, typedText.length+1);
                     document.getElementById('text-container').textContent = practiceText[currentLineIndex];
+                    updateUpcomingText();
+                    updateProgress(); // 진행률 업데이트
                 } else {
                     finished = true;
                     document.getElementById('text-container').textContent = "모든 문장을 완료했습니다!";
@@ -324,6 +351,21 @@
                 listItem.textContent = `${index + 1}. ${entry.date} - ${entry.time}초`;
                 historyList.appendChild(listItem);
             });
+        }
+
+        // 앞으로 타이핑할 문장 업데이트
+        function updateUpcomingText() {
+            let upcomingText = '';
+            // for (let i = currentLineIndex + 1; i < practiceText.length; i++) {
+            //     upcomingText = practiceText[i] + '\n';
+            // }
+            document.getElementById('upcoming-text').textContent = practiceText[currentLineIndex + 1];
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const progress = ((currentLineIndex + 1) / practiceText.length) * 100;
+            document.getElementById('progress-container').textContent = `진행률: ${progress.toFixed(2)}%`;
         }
 		
 		window.onload = function() {
